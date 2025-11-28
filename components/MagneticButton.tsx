@@ -3,13 +3,11 @@
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { ReactNode, useRef } from 'react'
 
-interface MagneticButtonProps {
+interface MagneticButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode
-  className?: string
-  onClick?: () => void
 }
 
-export default function MagneticButton({ children, className = '', onClick }: MagneticButtonProps) {
+export default function MagneticButton({ children, className = '', onClick, type, disabled, ...props }: MagneticButtonProps) {
   const ref = useRef<HTMLButtonElement>(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -41,13 +39,16 @@ export default function MagneticButton({ children, className = '', onClick }: Ma
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
+      type={type}
+      disabled={disabled}
       style={{
         x: mouseXSpring,
         y: mouseYSpring,
       }}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={disabled ? {} : { scale: 1.05 }}
+      whileTap={disabled ? {} : { scale: 0.95 }}
       className={className}
+      {...props}
     >
       {children}
     </motion.button>
